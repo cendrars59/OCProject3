@@ -2,7 +2,7 @@ parameters = {
 
     'gameInfo': {
         'name': 'Rescue Mc Gyver',
-        'version' : '0.1'
+        'version': '0.1'
     },
 
     'screenSize': {
