@@ -1,5 +1,5 @@
 # -*- coding: Utf-8 -*
-from Tools.FilesManagement.import_maps import build_grid_from_file
+from utils.files_management.import_maps import build_grid_from_file
 
 
 class Labyrinth:
@@ -23,8 +23,8 @@ class Labyrinth:
         """
         self.grid = build_grid_from_file(file)
 
-
-    def get_departure(self):
+    @property
+    def departure(self):
         """
         Function to retrieve the departure position on the grid. Departure is define by the value d into the map
         file.
@@ -39,7 +39,8 @@ class Labyrinth:
                 index_column += 1
             index_row += 1
 
-    def get_end(self):
+    @property
+    def end(self):
         """
         Function to retrieve the departure position on the grid. Departure is define by the value f into the map
         file.
@@ -73,7 +74,7 @@ class Labyrinth:
     def get_items_list(self, params):
 
         items_list = dict(params)
-        position_list = self.get_items_position()
+        position_list = self.get_items_position(items_list)
 
         count = 0
         for key, value in items_list.items():

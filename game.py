@@ -2,22 +2,21 @@
 # -*- coding: Utf-8 -*
 
 import pygame
-from Parameters.appParams import parameters
-from Parameters.itemsParams import items
-import Models.persona
-import Models.labyrinth
-import Models.item
+from parameters.app_params import parameters
+from parameters.items_params import items
+import models.Persona
+import models.Labyrinth
+import models.Item
 
 # Labyrinth initialization
 path_to_map_file = 'Resources//Maps//map1.txt'
-level = Models.labyrinth.Labyrinth(path_to_map_file)
-start_position = level.get_departure()
-end_position = level.get_end()
+level = models.Labyrinth.Labyrinth(path_to_map_file)
+
 
 # List of items building up and placing on grid
 items_list = []
 for key, value in items.items():
-    item = Models.item.Item(value['name'], value['icon'])
+    item = models.Item.Item(value['name'], value['icon'])
     item.define_random_position(level.grid)
     items_list.append(item)
 
@@ -31,9 +30,9 @@ gameVersion = parameters['gameInfo']['version']
 isRunning = True
 
 # Persona initialization
-player = Models.persona.Persona(start_position, 'Mac Gyver', 'Alive', True, 'Resources//Pictures//MacGyver.png',
+player = models.Persona.Persona(level.departure, 'Mac Gyver', 'Alive', True, 'Resources//Pictures//MacGyver.png',
                                 items_list)
-enemy = Models.persona.Persona(end_position, 'The bad guy', 'Bad guy', False, 'Resources//Pictures//Gardien.png',
+enemy = models.Persona.Persona(level.departure, 'The bad guy', 'Bad guy', False, 'Resources//Pictures//Gardien.png',
                                None)
 
 # Game initialization
