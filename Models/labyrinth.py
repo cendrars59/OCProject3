@@ -56,9 +56,8 @@ class Labyrinth:
             index_row += 1
 
     # To review
-    def get_item_position(self, items_list):
+    def dispatch_items_randomly(self, items_list):
 
-        items_list = []
         index_row = 0
         for row in self.grid:
             index_column = 0

@@ -6,8 +6,8 @@ parameters = {
     },
 
     'screenSize': {
-        'width': 1200,
-        'height': 760
+        'width': 500,
+        'height': 500
     },
 
     'background': {

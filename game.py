@@ -4,22 +4,20 @@
 import pygame
 from pygame.locals import *
 from parameters.app_params import parameters
-from parameters.items_params import items
 import models.Persona
 import models.Labyrinth
-import models.Item
+import models.Items_List
 
 # Labyrinth initialization
-path_to_map_file = 'Resources//Maps//map1.txt'
+path_to_map_file = 'resources//Maps//map1.txt'
 level = models.Labyrinth.Labyrinth(path_to_map_file)
 
 
 # List of items building up and placing on grid
-items_list = []
-for key, value in items.items():
-    item = models.Item.Item(value['name'], value['icon'])
-    item.define_random_position(level.grid)
-    items_list.append(item)
+
+items = models.Items_List.Items_List()
+items.dispatch_items_randomly(level)
+
 
 
 # Windows initialization
@@ -31,8 +29,7 @@ gameVersion = parameters['gameInfo']['version']
 isRunning = True
 
 # Persona initialization
-player = models.Persona.Persona(level.departure, 'Mac Gyver', 'Alive', True, 'Resources//Pictures//MacGyver.png',
-                                items_list)
+player = models.Persona.Persona(level.departure, 'Mac Gyver', 'Alive', True, 'Resources//Pictures//MacGyver.png',                                items.list)
 enemy = models.Persona.Persona(level.departure, 'The bad guy', 'Bad guy', False, 'Resources//Pictures//Gardien.png',
                                None)
 
@@ -63,12 +60,13 @@ while not_stop:
         elif event.type == KEYDOWN:
             if event.key == K_DOWN or event.key == K_UP or event.key == K_RIGHT or event.key == K_LEFT:
                 player.move(event.key, level)
-                #player.gather_items(level, items_list)
-                print(player.position)
-                print_grid()
+                player.find_item(level)
                 for item in player.grabbedItems:
                     print(item.name)
                     print(item.found)
+                    print(item.position)
+                print_grid()
+
 
 # Game initialization
 # - Game init

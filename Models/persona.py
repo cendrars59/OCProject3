@@ -40,21 +40,19 @@ class Persona:
         self.icon = icon
         self.grabbedItems = items_list
 
-    def gather_items(self, grid, items_list):
+    def find_item(self, level):
         """
         function to identify the items found by player along the game.
-        :param items_list: list of existing items of the level.
-        :param grid: game grid represented by a 2 dimensional array.
-        :return: return the list of items
+        :param level: game grid represented by a 2 dimensional array.
+        :return:
         """
 
-        if grid[self.position[0]][self.position[1]] == 'i':
-            for item in items_list:
+        if level.grid[self.position[0]][self.position[1]] == 'i':
+            for item in self.grabbedItems:
                 if item.position == self.position:
                     item.found = True
                     item.icon_path = "{0}_found.png".format(item.name)
-                    grid[self.position[0]][self.position[1]] = 'f'
-            self.grabbedItems = items_list
+                    level.grid[self.position[0]][self.position[1]] = 'f'
         
     @property
     def has_sering(self):
