@@ -98,6 +98,8 @@ class Labyrinth:
             return 'f'
         elif self.grid[player_next_row][player_next_column] == 'e':
             return 'e'
+        elif self.grid[player_next_row][player_next_column] == 'p':
+            return 'p'
 
 
 

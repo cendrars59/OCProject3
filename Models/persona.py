@@ -92,8 +92,7 @@ class Persona:
         :param key: stroke key. Type string.
         :return:
         """
-        print(key)
-        next_value_on_grid = None
+        next_value_on_grid = 'p'
         # move forward
         if key == K_RIGHT and self.position[1] + 1 <= len(level.grid[0]) and\
                 level.grid[self.position[0]][self.position[1] + 1] != 'w':
@@ -114,14 +113,14 @@ class Persona:
             level.grid[self.position[0]+1][self.position[1]] = '0'  # removing the older player position
 
         # move down
-        elif key == K_DOWN and self.position[0] + 1 <= len(level.grid) and\
-                level.grid[self.position[0]+1][self.position[1]] != 'w':
+        elif key == K_DOWN and self.position[0] + 1 <= len(level.grid) and level.grid[self.position[0]+1][self.position[1]] != 'w':
             next_value_on_grid = level.find_next_value_on_grid(self.position[0] + 1, self.position[1])
             self.position = self.position[0] + 1, self.position[1]
             level.grid[self.position[0] - 1][self.position[1]] = '0'  # removing the older player position
 
         # no move
         else:
+            next_value_on_grid = level.find_next_value_on_grid(self.position[0], self.position[1])
             self.position = self.position
 
         level.grid[self.position[0]][self.position[1]] = next_value_on_grid  # Set new value according new position
