@@ -2,6 +2,7 @@
 # -*- coding: Utf-8 -*
 
 import pygame
+from pygame.locals import *
 from parameters.app_params import parameters
 from parameters.items_params import items
 import models.Persona
@@ -35,6 +36,40 @@ player = models.Persona.Persona(level.departure, 'Mac Gyver', 'Alive', True, 'Re
 enemy = models.Persona.Persona(level.departure, 'The bad guy', 'Bad guy', False, 'Resources//Pictures//Gardien.png',
                                None)
 
+
+# Function used for demo purpose
+def print_grid():
+    for row in level.grid:
+        print(row)
+
+
+not_stop = True
+pygame.init()
+
+while not_stop:
+    pygame.display.set_caption('{0}   Version: {1}'.format(gameName, gameVersion))
+    screen = pygame.display.set_mode((screenWidth, screenHeight))
+    background_picture_path = 'Resources//Pictures//purple-stone-background.jpg'
+    background = pygame.image.load(background_picture_path).convert()
+    screen.blit(background, (0, 0))
+    pygame.display.flip()
+
+    for event in pygame.event.get():
+
+        if event.type == pygame.QUIT:
+            not_stop = False
+            pygame.quit()
+
+        elif event.type == KEYDOWN:
+            if event.key == K_DOWN or event.key == K_UP or event.key == K_RIGHT or event.key == K_LEFT:
+                player.move(event.key, level)
+                #player.gather_items(level, items_list)
+                print(player.position)
+                print_grid()
+                for item in player.grabbedItems:
+                    print(item.name)
+                    print(item.found)
+
 # Game initialization
 # - Game init
 # - Setting screen
@@ -42,17 +77,9 @@ enemy = models.Persona.Persona(level.departure, 'The bad guy', 'Bad guy', False,
 # - Set BackGround
 
 # pygame.init()
-# pygame.display.set_caption('{0}   Version: {1}'.format(gameName, gameVersion))
-# screen = pygame.display.set_mode((screenWidth, screenHeight))
-# background_picture_path = 'Resources//Pictures//purple-stone-background.jpg'
-# background = pygame.image.load(background_picture_path).convert()
-# screen.blit(background, (0, 0))
-# pygame.display.flip()
+#
 
 # while isRunning:
-#    for event in pygame.event.get():
-#        if event.type == pygame.QUIT:
-#           isRunning = False
-#           pygame.quit()
+#
 
 # exit()

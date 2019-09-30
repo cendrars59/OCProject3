@@ -1,4 +1,8 @@
 # -*- coding: Utf-8 -*
+from pygame.constants import K_DOWN
+from pygame.constants import K_UP
+from pygame.constants import K_LEFT
+from pygame.constants import K_RIGHT
 
 
 class Persona:
@@ -80,33 +84,47 @@ class Persona:
         else:
             self.status = 'alive'
 
-    def move(self, grid, key):
+    def move(self, key, level):
         """
         Function to manage the moves of the player according the stroke key.
         User is not allowed to get off the grid or on a wall position. In such case, player stays at the same
         position.
 
-        :param grid: game level. Type labyrinth.
+        :param level: game level. Type labyrinth.
         :param key: stroke key. Type string.
         :return:
         """
-
+        print(key)
+        next_value_on_grid = None
         # move forward
-        if key == 'f' and (self.position[1] + 1 <= len(grid[0]) or grid[self.position[0]][self.position[1] + 1] != 'w'):
-            self.position[1] = self.position[1] + 1
+        if key == K_RIGHT and self.position[1] + 1 <= len(level.grid[0]) and\
+                level.grid[self.position[0]][self.position[1] + 1] != 'w':
+            next_value_on_grid = level.find_next_value_on_grid(self.position[0], self.position[1] + 1)
+            self.position = self.position[0], self.position[1] + 1
+            level.grid[self.position[0]][self.position[1]-1] = '0'  # removing the older player position
 
         # move back
-        elif key == 'b' and (self.position[1] - 1 > 0 or grid[self.position[0]][self.position[1] - 1] != 'w'):
-            self.position[1] = self.position[1] - 1
+        elif key == K_LEFT and self.position[1] - 1 >= 0 and level.grid[self.position[0]][self.position[1] - 1] != 'w':
+            next_value_on_grid = level.find_next_value_on_grid(self.position[0], self.position[1] - 1)
+            self.position = self.position[0], self.position[1] - 1
+            level.grid[self.position[0]][self.position[1]+1] = '0'  # removing the older player position
 
         # move up
-        elif key == 'u' and (self.position[0] - 1 > 0 or grid[self.position[0] - 1][self.position[1]] != 'w'):
-            self.position[0] = self.position[0] - 1
+        elif key == K_UP and self.position[0] - 1 >= 0 and level.grid[self.position[0] - 1][self.position[1]] != 'w':
+            next_value_on_grid = level.find_next_value_on_grid(self.position[0] - 1, self.position[1])
+            self.position = self.position[0] - 1, self.position[1]
+            level.grid[self.position[0]+1][self.position[1]] = '0'  # removing the older player position
 
         # move down
-        elif key == 'd' and (self.position[0] + 1 <= len(grid) or grid[self.position[0] + 1][self.position[1]] != 'w'):
-            self.position[0] = self.position[0] + 1
+        elif key == K_DOWN and self.position[0] + 1 <= len(level.grid) and\
+                level.grid[self.position[0]+1][self.position[1]] != 'w':
+            next_value_on_grid = level.find_next_value_on_grid(self.position[0] + 1, self.position[1])
+            self.position = self.position[0] + 1, self.position[1]
+            level.grid[self.position[0] - 1][self.position[1]] = '0'  # removing the older player position
 
         # no move
         else:
             self.position = self.position
+
+        level.grid[self.position[0]][self.position[1]] = next_value_on_grid  # Set new value according new position
+

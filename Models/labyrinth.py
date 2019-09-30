@@ -35,7 +35,7 @@ class Labyrinth:
             index_column = 0
             for c in row:
                 if c == 's':
-                    return index_row + 1, index_column + 1
+                    return index_row, index_column
                 index_column += 1
             index_row += 1
 
@@ -51,7 +51,7 @@ class Labyrinth:
             index_column = 0
             for c in row:
                 if c == 'e':
-                    return index_row + 1, index_column + 1
+                    return index_row, index_column
                 index_column += 1
             index_row += 1
 
@@ -64,7 +64,7 @@ class Labyrinth:
             index_column = 0
             for c in row:
                 if c == 'i':
-                    position = (index_row + 1, index_column + 1)
+                    position = (index_row, index_column)
                     items_list.append(position)
 
                 index_column += 1
@@ -82,6 +82,26 @@ class Labyrinth:
             value.update(position_attribute)
             count += 1
         return items_list
+
+    def find_next_value_on_grid(self, player_next_row, player_next_column):
+        """
+        function to calculate the next value on the grid according the move of the player
+        :param player_next_row: calculated next row number according the player's move .Type int.
+        :param player_next_column: calculated next row number according the player's move .Type int.
+        :return: value of Type string
+        """
+
+        if self.grid[player_next_row][player_next_column] == '0':
+            return 'p'
+        elif self.grid[player_next_row][player_next_column] == 'i':
+            return 'i'
+        elif self.grid[player_next_row][player_next_column] == 'f':
+            return 'f'
+        elif self.grid[player_next_row][player_next_column] == 'e':
+            return 'e'
+
+
+
 
 
 
