@@ -3,6 +3,9 @@ from pygame.constants import K_DOWN
 from pygame.constants import K_UP
 from pygame.constants import K_LEFT
 from pygame.constants import K_RIGHT
+from utils.filesManagement.import_items import build_list_from_file
+from models.Item import Item
+from utils.filesManagement.import_maps import build_grid_from_file
 
 
 class Persona:
@@ -22,23 +25,25 @@ class Persona:
         - persona can win or lose
     """
 
-    def __init__(self, position, name, status, is_moving, icon, items_list):
+    def __init__(self, type, position, name, status, is_allowed_to_move, icon, items_list):
         """
-
+        :param type: Type of the persona. Type string
         :param position: current position of the persona. Type is tuple
         :param name: name of the persona. Type is string
         :param status: Status can the following value 'alive', bad guy', 'dead', 'winner'. Type is string
-        :param is_moving: persona is allowed to move. Type is boolean
+        :param is_allowed_to_move: persona is allowed to move. Type is boolean
         :param icon: path to the picture to get the persona icon. Type is string
         :param items_list: list of items to retrieve. Type is dictionary
         """
 
+        self.type = type
         self.position = position
         self.name = name
         self.status = status
-        self.is_moving = is_moving
+        self.is_allowed_to_move = is_allowed_to_move
         self.icon = icon
         self.grabbedItems = items_list
+        self.has_sering = Item('sering', 'resources//Pictures//seringue.png')
 
     def find_item(self, level):
         """
@@ -46,41 +51,40 @@ class Persona:
         :param level: game grid represented by a 2 dimensional array.
         :return:
         """
-
         if level.grid[self.position[0]][self.position[1]] == 'i':
             for item in self.grabbedItems:
                 if item.position == self.position:
                     item.found = True
                     item.icon_path = "{0}_found.png".format(item.name)
                     level.grid[self.position[0]][self.position[1]] = 'f'
-        
-    @property
-    def has_sering(self):
+
+    def build_sering(self):
         """
         Function to verify if all items belonging to the list have been found.
         :return:
         """
+        if self.status == 'alive':
+            found_count = 0
+            for item in self.grabbedItems:
+                if item.found:
+                    found_count += 1
 
-        found_count = 0
-        for item in self.grabbedItems:
-            if item.found:
-                found_count += 1
+            if found_count == len(self.grabbedItems):
+                self.has_sering.found = True
+                self.icon = "resources//Pictures//pi.png"
 
-        if found_count == len(self.grabbedItems):
-            return True
-
-    def end_game(self, end_position):
+    def end_game(self, level, enemy):
         """
-
-        :param end_position:
+        function to define whether the player has lost or won the game.
+        :param level:
+        :param enemy:
         :return:
         """
-        if self.position == end_position and self.has_sering:
+        if self.position == level.end and self.has_sering.found and self.status == 'alive' and self.type == 'player':
             self.status = 'winner'
-        elif self.position == end_position and not self.has_sering:
+        elif self.position == level.end and not self.has_sering.found and self.status == 'alive' and\
+                self.type == 'player':
             self.status = 'dead'
-        else:
-            self.status = 'alive'
 
     def move(self, key, level):
         """
@@ -94,7 +98,7 @@ class Persona:
         """
         next_value_on_grid = 'p'
         # move forward
-        if key == K_RIGHT and self.position[1] + 1 <= len(level.grid[0]) and\
+        if key == K_RIGHT and self.position[1] + 1 <= len(level.grid[0])-1 and\
                 level.grid[self.position[0]][self.position[1] + 1] != 'w':
             next_value_on_grid = level.find_next_value_on_grid(self.position[0], self.position[1] + 1)
             self.position = self.position[0], self.position[1] + 1
@@ -113,7 +117,8 @@ class Persona:
             level.grid[self.position[0]+1][self.position[1]] = '0'  # removing the older player position
 
         # move down
-        elif key == K_DOWN and self.position[0] + 1 <= len(level.grid) and level.grid[self.position[0]+1][self.position[1]] != 'w':
+        elif key == K_DOWN and self.position[0] + 1 <= len(level.grid)-1 and\
+                level.grid[self.position[0]+1][self.position[1]] != 'w':
             next_value_on_grid = level.find_next_value_on_grid(self.position[0] + 1, self.position[1])
             self.position = self.position[0] + 1, self.position[1]
             level.grid[self.position[0] - 1][self.position[1]] = '0'  # removing the older player position

@@ -22,7 +22,6 @@ class Item:
         :return:self.position
         """
         position_found = False
-
         while not position_found:
             row = randint(1, len(level.grid)-1)
             column = randint(1, len(level.grid[0])-1)
@@ -32,12 +31,7 @@ class Item:
                 position_found = True
         return self.position
 
-    def be_able_to_find_it(self):
-        """
-        Function to verify if the player can access to the item
-        :return: A boolean
-        """
-        pass
+
 
 
 
