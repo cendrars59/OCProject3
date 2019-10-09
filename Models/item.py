@@ -18,27 +18,20 @@ class Item:
     def define_random_position(self, level):
         """
         defining a random position for an item.Position type is tuple
-        :param level: level grid. Type labyrinth
-        :return:
+        :param level: labyrinth
+        :return:self.position
         """
         position_found = False
-        able_to_find = False
-
-        while not (position_found and able_to_find):
+        while not position_found:
             row = randint(1, len(level.grid)-1)
             column = randint(1, len(level.grid[0])-1)
             if level.grid[row][column] != 'w':
                 self.position = (row, column)
                 level.grid[row][column] = 'i'
                 position_found = True
-                if self.be_able_to_find_it():
-                    able_to_find = True
-                else:
-                    able_to_find = False
+        return self.position
 
-    def be_able_to_find_it(self):
-        """
-        Function to verify if the player can access to the item
-        :return: A boolean
-        """
-        pass
+
+
+
+
